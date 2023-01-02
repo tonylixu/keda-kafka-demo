@@ -1,0 +1,21 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: consumer-scaler
+  labels:
+    deploymentName: consumer-service
+  namespace: keda-sample
+spec:
+  scaleTargetRef:
+    name: consumer-service
+  pollingInterval: 1
+  cooldownPeriod:  30
+  minReplicaCount: 0
+  maxReplicaCount: 10
+  triggers:
+    - type: kafka
+      metadata:
+        bootstrapServers: my-cluster-kafka-bootstrap.kafka:9092
+        topic: messages
+        consumerGroup: testSample
+        lagThreshold: '5'
